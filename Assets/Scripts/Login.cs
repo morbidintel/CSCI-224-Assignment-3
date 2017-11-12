@@ -9,7 +9,7 @@ using System.IO;
 public class Login : MonoBehaviour
 {
 	[SerializeField]
-	Text loginErrorText = null;
+	Text loginErrorText = null, loadingText = null;
 	string defaultError = "Incorrect username or password.";
 	string noUsernameError = "Please enter username.";
 	string noPasswordError = "Please enter password.";
@@ -29,6 +29,7 @@ public class Login : MonoBehaviour
 		db.Open();
 
 		loginErrorText.gameObject.SetActive(false);
+		loadingText.gameObject.SetActive(false);
 	}
 
 	void Update()
@@ -71,6 +72,12 @@ public class Login : MonoBehaviour
 		{
 		}
 
-		if (Role != "") loginErrorText.gameObject.SetActive(false);
+		if (Role != "")
+		{
+			loginErrorText.gameObject.SetActive(false);
+			loginErrorText.transform.parent.gameObject.SetActive(false);
+			loadingText.gameObject.SetActive(true);
+			UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("main");
+		}
 	}
 }
