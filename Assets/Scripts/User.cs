@@ -1,11 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class User : Gamelogic.Extensions.Singleton<User>
 {
+	public enum Role
+	{
+		Employee, HR, Manager, Admin
+	}
+	public static string[] Roles = { "Employee", "HR", "Manager", "Admin" };
+
 	public static string username { get { return Instance._username; } }
-	public static string role { get { return Instance._role; } }
+	public static Role role { get { return (Role)Array.IndexOf(Roles, Instance._role); } }
 	[SerializeField]
 	string _username, _role;
 
