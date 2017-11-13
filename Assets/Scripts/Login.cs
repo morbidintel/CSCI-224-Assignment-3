@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
+using UnityEngine.SceneManagement;
 using Mono.Data.Sqlite;
-using System.IO;
 
 public class Login : MonoBehaviour
 {
@@ -18,15 +17,9 @@ public class Login : MonoBehaviour
 	public string Password { get; set; }
 	public string Role;
 
-	SqliteConnection db = null;
-
-	void Awake()
+	void Start()
 	{
 		DontDestroyOnLoad(gameObject);
-
-		if (!File.Exists("db.sqlite")) Debug.LogError("DB not found!");
-		db = new SqliteConnection("Data Source=db.sqlite; Version=3");
-		db.Open();
 
 		loginErrorText.gameObject.SetActive(false);
 		loadingText.gameObject.SetActive(false);
@@ -54,7 +47,7 @@ public class Login : MonoBehaviour
 
 		try
 		{
-			using (SqliteCommand command = new SqliteCommand(db))
+			using (SqliteCommand command = new SqliteCommand(Database.db))
 			{
 				command.CommandText =
 					"SELECT role FROM users " +
@@ -77,7 +70,14 @@ public class Login : MonoBehaviour
 			loginErrorText.gameObject.SetActive(false);
 			loginErrorText.transform.parent.gameObject.SetActive(false);
 			loadingText.gameObject.SetActive(true);
-			UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("main");
+			SceneManager.LoadSceneAsync("main");
+			SceneManager.sceneLoaded += OnSceneLoaded;
 		}
+	}
+
+	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+	{
+		User.Instance.SetUser(Username, Role);
+		Destroy(gameObject);
 	}
 }
