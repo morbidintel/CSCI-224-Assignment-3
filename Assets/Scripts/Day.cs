@@ -7,7 +7,12 @@ using Gamelogic.Extensions;
 
 public class Day : MonoBehaviour
 {
-	public DateTime date;
+	public Calendar.HoursEntry hours = new Calendar.HoursEntry();
+	public DateTime date
+	{
+		get { return hours.date; }
+		set { hours.date = value; }
+	}
 	public Text dateText = null, hoursText = null;
 	Image background = null;
 	Button button = null;

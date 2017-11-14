@@ -11,12 +11,23 @@ public class Calendar : MonoBehaviour
 	public class HoursEntry
 	{
 		public DateTime date, time_in, time_out;
+		public string rawDate, rawTimeIn, rawTimeOut;
+
 		public HoursEntry() { }
+		public HoursEntry(string rawDate, string rawTimeIn, string rawTimeOut)
+		{
+			this.rawDate = rawDate; this.rawTimeIn = rawTimeIn; this.rawTimeOut = rawTimeOut;
+			date = DateTime.ParseExact(rawDate, "dd-MM-yyyy", null);
+			time_in = DateTime.ParseExact(rawDate + " " + rawTimeIn, "dd-MM-yyyy HHmm", null);
+			time_out = DateTime.ParseExact(rawDate + " " + rawTimeOut, "dd-MM-yyyy HHmm", null);
+		}
+
 		public HoursEntry(DateTime date, DateTime time_in, DateTime time_out)
 		{
-			this.date = date;
-			this.time_in = time_in;
-			this.time_out = time_out;
+			this.date = date; this.time_in = time_in; this.time_out = time_out;
+			rawDate = date.ToString("dd-MM-yyyy");
+			rawTimeIn = time_in.ToString("HHMM");
+			rawTimeOut = time_out.ToString("HHMM");
 		}
 	}
 
@@ -60,10 +71,7 @@ public class Calendar : MonoBehaviour
 			{
 				while (reader.Read())
 				{
-					DateTime date = DateTime.ParseExact(reader["date"].ToString(), "dd-MM-yyyy", null);
-					DateTime time_in = DateTime.ParseExact(reader["date"] + " " + reader["in"], "dd-MM-yyyy HHmm", null);
-					DateTime time_out = DateTime.ParseExact(reader["date"] + " " + reader["out"], "dd-MM-yyyy HHmm", null);
-					hours.Add(new HoursEntry(date, time_in, time_out));
+					hours.Add(new HoursEntry(reader["date"].ToString(), reader["time_in"].ToString(), reader["time_out"].ToString()));
 				}
 			}
 		}
@@ -100,7 +108,7 @@ public class Calendar : MonoBehaviour
 				h.date.Day == date);
 			if (he != null)
 			{
-				day.date = he.date;
+				day.hours = he;
 				day.hoursText.text = (he.time_out - he.time_in).TotalHours.ToString("0.## hrs");
 			}
 			else
@@ -128,7 +136,7 @@ public class Calendar : MonoBehaviour
 				h.date.Day == date);
 			if (he != null)
 			{
-				day.date = he.date;
+				day.hours = he;
 				day.hoursText.text = (he.time_out - he.time_in).TotalHours.ToString("0.## hrs");
 			}
 			else
@@ -157,7 +165,7 @@ public class Calendar : MonoBehaviour
 					h.date.Day == date);
 				if (he != null)
 				{
-					day.date = he.date;
+					day.hours = he;
 					day.hoursText.text = (he.time_out - he.time_in).TotalHours.ToString("0.## hrs");
 				}
 				else
