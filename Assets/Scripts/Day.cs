@@ -47,4 +47,9 @@ public class Day : MonoBehaviour
 	{
 		button.onClick.AddListener(action);
 	}
+
+	public void CalculateHours()
+	{
+		hoursText.text = (hours.time_out - hours.time_in).TotalHours.ToString("0.## hrs");
+	}
 }

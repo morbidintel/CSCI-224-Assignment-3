@@ -17,15 +17,15 @@ public class Calendar : MonoBehaviour
 		public HoursEntry(string rawDate, string rawTimeIn, string rawTimeOut)
 		{
 			this.rawDate = rawDate; this.rawTimeIn = rawTimeIn; this.rawTimeOut = rawTimeOut;
-			date = DateTime.ParseExact(rawDate, "dd-MM-yyyy", null);
-			time_in = DateTime.ParseExact(rawDate + " " + rawTimeIn, "dd-MM-yyyy HHmm", null);
-			time_out = DateTime.ParseExact(rawDate + " " + rawTimeOut, "dd-MM-yyyy HHmm", null);
+			date = DateTime.ParseExact(rawDate, "yyyy-MM-dd", null);
+			time_in = DateTime.ParseExact(rawDate + " " + rawTimeIn, "yyyy-MM-dd HHmm", null);
+			time_out = DateTime.ParseExact(rawDate + " " + rawTimeOut, "yyyy-MM-dd HHmm", null);
 		}
 
 		public HoursEntry(DateTime date, DateTime time_in, DateTime time_out)
 		{
 			this.date = date; this.time_in = time_in; this.time_out = time_out;
-			rawDate = date.ToString("dd-MM-yyyy");
+			rawDate = date.ToString("yyyy-MM-dd");
 			rawTimeIn = time_in.ToString("HHMM");
 			rawTimeOut = time_out.ToString("HHMM");
 		}
@@ -39,9 +39,9 @@ public class Calendar : MonoBehaviour
 	AddHours addHoursScript = null;
 
 	[SerializeField, ReadOnly]
-	static int currentYear, currentMonth;
+	public static int currentYear, currentMonth;
 	public static List<Day> daysShown = new List<Day>();
-	static List<HoursEntry> hours = new List<HoursEntry>();
+	public static List<HoursEntry> hours = new List<HoursEntry>();
 
 	// Use this for initialization
 	void Start()
@@ -50,7 +50,7 @@ public class Calendar : MonoBehaviour
 		if (daysShown.Count == 0) ShowMonth(DateTime.Now.Year, DateTime.Now.Month);
 		else ShowMonth(daysShown);
 
-		flexStatusScript.totalFlexHours = (float)(hours.Sum(he => (he.time_out - he.time_in).TotalHours) - (CountWeekdaysInMonth(currentYear, currentMonth) * 8));
+		flexStatusScript.CalculateFlexHours();
 	}
 
 	// Update is called once per frame
@@ -64,15 +64,12 @@ public class Calendar : MonoBehaviour
 		using (SqliteCommand command = new SqliteCommand(Database.db))
 		{
 			command.CommandText =
-				"SELECT date, time_in AS 'in', time_out AS 'out' FROM hours " +
-				"WHERE hours.username = \"" + User.username + "\"";
+				string.Format("SELECT date, time_in, time_out FROM hours WHERE hours.username = \"{0}\"", User.username);
 
 			using (SqliteDataReader reader = command.ExecuteReader())
 			{
-				while (reader.Read())
-				{
-					hours.Add(new HoursEntry(reader["date"].ToString(), reader["time_in"].ToString(), reader["time_out"].ToString()));
-				}
+				while (reader.Read()) hours.Add(new HoursEntry(
+					reader["date"].ToString(), reader["time_in"].ToString(), reader["time_out"].ToString()));
 			}
 		}
 	}
@@ -187,12 +184,5 @@ public class Calendar : MonoBehaviour
 	{
 		foreach (Day d in daysToShow)
 			Instantiate(d.gameObject, transform);
-	}
-
-	int CountWeekdaysInMonth(int year, int month)
-	{
-		return Enumerable.Range(1, DateTime.DaysInMonth(currentYear, currentMonth))
-					 .Select(day => new DateTime(currentYear, currentMonth, day))
-					 .Count(d => d.DayOfWeek != DayOfWeek.Saturday && d.DayOfWeek != DayOfWeek.Friday);
 	}
 }
