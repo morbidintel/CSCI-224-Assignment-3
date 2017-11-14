@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class TopMenu : MonoBehaviour
 {
 	[SerializeField]
-	Button hoursButton = null, leaveReqestButton = null, employeeMgmtButton = null, leaveApprovalButton = null;
+	Button leaveReqestButton = null, employeeMgmtButton = null, leaveApprovalButton = null;
 
 	// Use this for initialization
 	void Start()

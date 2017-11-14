@@ -10,16 +10,17 @@ public class UIManager : MonoBehaviour
 	List<GameObject> pages = new List<GameObject>();
 
 	[SerializeField]
-	GameObject TopMenu, MainPage;
+	GameObject TopMenu = null, MainPage = null;
 
 	[SerializeField]
-	Button backButton;
+	Button backButton = null;
 
 	// Use this for initialization
 	void Start()
 	{
 		foreach (GameObject p in pages) p.SetActive(false);
 		MainPage.SetActive(true);
+		backButton.gameObject.SetActive(false);
 	}
 
 	// Update is called once per frame
