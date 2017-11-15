@@ -6,59 +6,30 @@ using UnityEngine;
 using UnityEngine.UI;
 using Mono.Data.Sqlite;
 
-public class HoursEntry
-{
-	public DateTime date, time_in, time_out;
-	public string rawDate, rawTimeIn, rawTimeOut;
-
-	public HoursEntry() { }
-	public HoursEntry(string rawDate, string rawTimeIn, string rawTimeOut)
-	{
-		this.rawDate = rawDate; this.rawTimeIn = rawTimeIn; this.rawTimeOut = rawTimeOut;
-		date = DateTime.ParseExact(rawDate, "yyyy-MM-dd", null);
-		time_in = DateTime.ParseExact(rawDate + " " + rawTimeIn, "yyyy-MM-dd HHmm", null);
-		time_out = DateTime.ParseExact(rawDate + " " + rawTimeOut, "yyyy-MM-dd HHmm", null);
-	}
-
-	public HoursEntry(DateTime date, DateTime time_in, DateTime time_out)
-	{
-		this.date = date; this.time_in = time_in; this.time_out = time_out;
-		rawDate = date.ToString("yyyy-MM-dd");
-		rawTimeIn = time_in.ToString("HHMM");
-		rawTimeOut = time_out.ToString("HHMM");
-	}
-
-	public double total { get { return (time_out - time_in).TotalHours; } }
-}
-
-public class Calendar : MonoBehaviour
+public class LeaveCalendar : MonoBehaviour
 {
 	[SerializeField]
 	protected GameObject dayPrefab = null;
-	[SerializeField]
-	private FlexStatus flexStatusScript = null;
-	[SerializeField]
-	private AddHours addHoursScript = null;
 
 	[SerializeField, ReadOnly]
 	public static int currentYear, currentMonth;
 	public static List<Day> daysShown = new List<Day>();
 	public static List<HoursEntry> hours = new List<HoursEntry>();
 
+	public List<Day> daysSelected = new List<Day>();
+	public Dictionary<DateTime, ApplyLeave.LeaveStatus> datesWithLeaves = new Dictionary<DateTime, ApplyLeave.LeaveStatus>();
+
 	// Use this for initialization
-	protected virtual void Start()
+	protected void Start()
 	{
 		if (hours.Count == 0) PopulateHoursFromDB();
 		if (daysShown.Count == 0) ShowMonth(DateTime.Now.Year, DateTime.Now.Month);
 		else ShowMonth(daysShown);
-
-		flexStatusScript?.CalculateFlexHours();
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-
 	}
 
 	void PopulateHoursFromDB()
@@ -76,7 +47,7 @@ public class Calendar : MonoBehaviour
 		}
 	}
 
-	public virtual void ShowMonth(int year, int month)
+	public void ShowMonth(int year, int month)
 	{
 		foreach (Day d in daysShown) Destroy(d.gameObject);
 		daysShown.Clear();
@@ -117,7 +88,8 @@ public class Calendar : MonoBehaviour
 			}
 
 			day.gameObject.SetActive(true);
-			day.MakeTransparent(true);
+			if (datesWithLeaves.ContainsKey(day.date)) day.SetLeaveStatus(datesWithLeaves[day.date]);
+			else day.MakeTransparent(true);
 			daysShown.Add(day);
 		}
 
@@ -143,7 +115,8 @@ public class Calendar : MonoBehaviour
 			}
 
 			day.gameObject.SetActive(true);
-			day.MakeTransparent(false);
+			if (datesWithLeaves.ContainsKey(day.date)) day.SetLeaveStatus(datesWithLeaves[day.date]);
+			else day.MakeTransparent(false);
 			daysShown.Add(day);
 		}
 
@@ -171,7 +144,8 @@ public class Calendar : MonoBehaviour
 				}
 
 				day.gameObject.SetActive(true);
-				day.MakeTransparent(true);
+				if (datesWithLeaves.ContainsKey(day.date)) day.SetLeaveStatus(datesWithLeaves[day.date]);
+				else day.MakeTransparent(true);
 				daysShown.Add(day);
 			}
 		}
@@ -181,20 +155,5 @@ public class Calendar : MonoBehaviour
 	{
 		foreach (Day d in daysToShow)
 			Instantiate(d.gameObject, transform);
-	}
-
-	public virtual void OnClickDay(Day day)
-	{
-		addHoursScript.ShowHours(day);
-		if (day.date < new DateTime(currentYear, currentMonth, 1))
-		{
-			DateTime prev = day.date.AddMonths(-1);
-			ShowMonth(prev.Year, prev.Month);
-		}
-		if (day.date > new DateTime(currentYear, currentMonth, 1).AddMonths(1).AddDays(-1))
-		{
-			DateTime next = day.date.AddMonths(1);
-			ShowMonth(next.Year, next.Month);
-		}
 	}
 }

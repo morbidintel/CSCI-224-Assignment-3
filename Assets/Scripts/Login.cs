@@ -77,7 +77,7 @@ public class Login : MonoBehaviour
 
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
-		User.Instance.SetUser(Username, Role);
+		User.Instance.SetUser(Username);
 		Destroy(gameObject);
 	}
 }

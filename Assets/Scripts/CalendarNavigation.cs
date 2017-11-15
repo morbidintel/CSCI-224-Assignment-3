@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class CalendarNavigation : MonoBehaviour
 {
 	[SerializeField]
-	Calendar calendar;
+	Calendar calendar = null;
 	[SerializeField]
 	Text prevMonth = null, nextMonth = null, currMonth = null;
 

@@ -40,6 +40,12 @@ public class AddHours : MonoBehaviour
 
 	}
 
+	void OnDisable()
+	{
+		ShowHours(null);
+		gameObject.SetActive(false);
+	}
+
 	public void OnClickSave()
 	{
 		DOTweenAnimation timeInAnim = timeInField.GetComponent<DOTweenAnimation>(),
@@ -67,7 +73,7 @@ public class AddHours : MonoBehaviour
 
 		if (hasError) return;
 
-			currentDay.hours.rawTimeIn = newTimeIn;
+		currentDay.hours.rawTimeIn = newTimeIn;
 		currentDay.hours.rawTimeOut = newTimeOut;
 		currentDay.hours.time_in = currentDay.hours.date + testIn;
 		currentDay.hours.time_out = currentDay.hours.date + testOut;
@@ -78,7 +84,7 @@ public class AddHours : MonoBehaviour
 		{
 			command.CommandText = string.Format(
 				"UPDATE hours SET time_in = \"{2}\", time_out = \"{3}\" WHERE username = \"{0}\" AND date = \"{1}\";" +
-				"INSERT INTO hours(username, date, time_in, time_out) SELECT \"{0}\", \"{1}\", \"{2}\", \"{3}\" WHERE(SELECT changes() = 0);",
+				"INSERT INTO hours (username, date, time_in, time_out) SELECT \"{0}\", \"{1}\", \"{2}\", \"{3}\" WHERE (SELECT changes() = 0);",
 				//"INSERT OR REPLACE INTO hours (username, date, time_in, time_out) VALUES (\"{0}\", \"{1}\", \"{2}\", \"{3}\")",
 				User.username, currentDay.hours.date.ToString("yyyy-MM-dd"), newTimeIn, newTimeOut);
 
@@ -96,13 +102,16 @@ public class AddHours : MonoBehaviour
 	public void ShowHours(Day day)
 	{
 		currentDay = day;
-		gameObject.SetActive(true);
-		timeIn.SetActive(true);
-		timeOut.SetActive(true);
-		buttons.SetActive(true);
+		gameObject.SetActive(day != null);
+		timeIn.SetActive(day != null);
+		timeOut.SetActive(day != null);
+		buttons.SetActive(day != null);
 
-		title.text = day.date.ToString("dddd dd MMM yyyy");
-		timeInField.text = day.hours.time_in != DateTime.MinValue ? day.hours.time_in.ToString("HHmm") : "";
-		timeOutField.text = day.hours.time_out != DateTime.MinValue ? day.hours.time_out.ToString("HHmm") : "";
+		if (day != null)
+		{
+			title.text = day.date.ToString("dddd dd MMM yyyy");
+			timeInField.text = day.hours.time_in != DateTime.MinValue ? day.hours.time_in.ToString("HHmm") : "";
+			timeOutField.text = day.hours.time_out != DateTime.MinValue ? day.hours.time_out.ToString("HHmm") : "";
+		}
 	}
 }

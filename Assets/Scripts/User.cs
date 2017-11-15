@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Mono.Data.Sqlite;
 
 public class User : Gamelogic.Extensions.Singleton<User>
 {
@@ -14,12 +15,13 @@ public class User : Gamelogic.Extensions.Singleton<User>
 	public static string username { get { return Instance._username; } }
 	public static Role role { get { return (Role)Array.IndexOf(Roles, Instance._role); } }
 	[SerializeField]
-	string _username, _role;
+	string _username;
+	string _role;
 
 	// Use this for initialization
-	void Start()
+	void Awake()
 	{
-
+		if (_role == null || _role == "") SetUser(_username);
 	}
 
 	// Update is called once per frame
@@ -28,9 +30,17 @@ public class User : Gamelogic.Extensions.Singleton<User>
 
 	}
 
-	public void SetUser(string username, string role)
+	public void SetUser(string username)
 	{
 		_username = username;
-		_role = role;
+
+		using (SqliteCommand command = new SqliteCommand(Database.db))
+		{
+			command.CommandText = string.Format("SELECT role FROM users WHERE username = \"{0}\"", username);
+			using (SqliteDataReader reader = command.ExecuteReader())
+			{
+				while (reader.Read()) _role = reader["role"].ToString();
+			}
+		}
 	}
 }
