@@ -34,7 +34,7 @@ public class User : Gamelogic.Extensions.Singleton<User>
 	{
 		_username = username;
 
-		using (SqliteCommand command = new SqliteCommand(Database.db))
+		using (SqliteCommand command = new SqliteCommand(Database.DB))
 		{
 			command.CommandText = string.Format("SELECT role FROM users WHERE username = \"{0}\"", username);
 			using (SqliteDataReader reader = command.ExecuteReader())

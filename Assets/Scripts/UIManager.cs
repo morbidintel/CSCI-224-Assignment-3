@@ -13,7 +13,7 @@ public class UIManager : MonoBehaviour
 	GameObject TopMenu = null, MainPage = null;
 
 	[SerializeField]
-	Button backButton = null;
+	Button backButton = null, logoutButton = null;
 
 	// Use this for initialization
 	void Start()
@@ -34,5 +34,10 @@ public class UIManager : MonoBehaviour
 		foreach (GameObject p in pages) p.SetActive(p == page);
 		MainPage.SetActive(page == MainPage);
 		backButton.gameObject.SetActive(page != MainPage);
+	}
+
+	public void Logout()
+	{
+		UnityEngine.SceneManagement.SceneManager.LoadScene("login");
 	}
 }

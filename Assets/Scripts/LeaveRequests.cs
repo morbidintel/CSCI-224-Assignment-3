@@ -19,7 +19,7 @@ public class LeaveRequests : MonoBehaviour
 	{
 		entries.Clear();
 
-		using (SqliteCommand command = new SqliteCommand(Database.db))
+		using (SqliteCommand command = new SqliteCommand(Database.DB))
 		{
 			command.CommandText =
 				string.Format("SELECT " +

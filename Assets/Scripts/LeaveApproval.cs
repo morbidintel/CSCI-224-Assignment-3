@@ -68,7 +68,7 @@ public class LeaveApproval : MonoBehaviour
 
 	public void OnClickApprove()
 	{
-		using (SqliteCommand command = new SqliteCommand(Database.db))
+		using (SqliteCommand command = new SqliteCommand(Database.DB))
 		{
 			command.CommandText = string.Format(
 				"UPDATE leaves SET status = \"Approved\" " +
@@ -86,7 +86,7 @@ public class LeaveApproval : MonoBehaviour
 
 	public void OnClickReject()
 	{
-		using (SqliteCommand command = new SqliteCommand(Database.db))
+		using (SqliteCommand command = new SqliteCommand(Database.DB))
 		{
 			command.CommandText = string.Format(
 				"UPDATE leaves SET status = \"Rejected\" " +

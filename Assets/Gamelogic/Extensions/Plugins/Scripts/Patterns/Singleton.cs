@@ -29,7 +29,7 @@ namespace Gamelogic.Extensions
 
 					if (instance == null)
 					{
-						instance = new GameObject("Database").AddComponent<T>();
+						instance = new GameObject(typeof(T).Name).AddComponent<T>();
 					}
 				}
 

@@ -15,7 +15,7 @@ public class UserList : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		using (SqliteCommand command = new SqliteCommand(Database.db))
+		using (SqliteCommand command = new SqliteCommand(Database.DB))
 		{
 			command.CommandText = "SELECT * FROM users";
 
@@ -46,7 +46,7 @@ public class UserList : MonoBehaviour
 		entry.Init("username" + entries.Count(e => e.username.Contains("username")), "Employee", "John Appleseed");
 		entries.Add(entry);
 
-		using (SqliteCommand command = new SqliteCommand(Database.db))
+		using (SqliteCommand command = new SqliteCommand(Database.DB))
 		{
 			command.CommandText = string.Format("INSERT INTO users (username) VALUES (\"{0}\")", entry.username);
 			command.ExecuteNonQuery();

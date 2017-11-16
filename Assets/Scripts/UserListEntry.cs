@@ -37,7 +37,7 @@ public class UserListEntry : MonoBehaviour
 	public void OnEndEdit(DG.Tweening.DOTweenAnimation anim)
 	{
 		InputField field = anim.GetComponent<InputField>();
-		
+
 		if (!User.Roles.Contains(role))
 		{
 			role = roleField.text = _role;
@@ -53,7 +53,7 @@ public class UserListEntry : MonoBehaviour
 			return;
 		}
 
-		using (SqliteCommand command = new SqliteCommand(Database.db))
+		using (SqliteCommand command = new SqliteCommand(Database.DB))
 		{
 			if (field == usernameField)
 			{

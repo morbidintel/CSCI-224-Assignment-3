@@ -80,7 +80,7 @@ public class AddHours : MonoBehaviour
 		currentDay.CalculateHours();
 		FlexStatus.Instance.CalculateFlexHours();
 
-		using (SqliteCommand command = new SqliteCommand(Database.db))
+		using (SqliteCommand command = new SqliteCommand(Database.DB))
 		{
 			command.CommandText = string.Format(
 				"UPDATE hours SET time_in = \"{2}\", time_out = \"{3}\" WHERE username = \"{0}\" AND date = \"{1}\";" +
@@ -110,6 +110,9 @@ public class AddHours : MonoBehaviour
 		if (day != null)
 		{
 			title.text = day.date.ToString("dddd dd MMM yyyy");
+			totalHours.text =
+				day.hours.time_in != DateTime.MinValue && day.hours.time_out != DateTime.MinValue ?
+				(day.hours.time_out - day.hours.time_in).TotalHours.ToString("0.## hours") : "";
 			timeInField.text = day.hours.time_in != DateTime.MinValue ? day.hours.time_in.ToString("HHmm") : "";
 			timeOutField.text = day.hours.time_out != DateTime.MinValue ? day.hours.time_out.ToString("HHmm") : "";
 		}

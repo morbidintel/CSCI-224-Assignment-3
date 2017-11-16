@@ -32,9 +32,16 @@ public class LeaveCalendar : MonoBehaviour
 	{
 	}
 
+	void OnDestroy()
+	{
+		foreach (var d in daysShown) if (d != null) Destroy(d.gameObject);
+		daysShown.Clear();
+		hours.Clear();
+	}
+
 	void PopulateHoursFromDB()
 	{
-		using (SqliteCommand command = new SqliteCommand(Database.db))
+		using (SqliteCommand command = new SqliteCommand(Database.DB))
 		{
 			command.CommandText =
 				string.Format("SELECT date, time_in, time_out FROM hours WHERE hours.username = \"{0}\"", User.username);

@@ -4,12 +4,8 @@ using UnityEngine.UI;
 
 public class TabSelect : MonoBehaviour
 {
-	private EventSystem eventSystem;
-
-	// Use this for initialization
-	void Start()
+	void Awake()
 	{
-		eventSystem = EventSystem.current;
 		DontDestroyOnLoad(gameObject);
 	}
 
@@ -23,12 +19,12 @@ public class TabSelect : MonoBehaviour
 			Selectable current = null;
 
 			// Figure out if we have a valid current selected gameobject
-			if (eventSystem.currentSelectedGameObject != null)
+			if (EventSystem.current.currentSelectedGameObject != null)
 			{
 				// Unity doesn't seem to "deselect" an object that is made inactive
-				if (eventSystem.currentSelectedGameObject.activeInHierarchy)
+				if (EventSystem.current.currentSelectedGameObject.activeInHierarchy)
 				{
-					current = eventSystem.currentSelectedGameObject.GetComponent<Selectable>();
+					current = EventSystem.current.currentSelectedGameObject.GetComponent<Selectable>();
 				}
 			}
 

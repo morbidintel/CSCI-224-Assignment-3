@@ -4,18 +4,20 @@ using UnityEngine;
 using Mono.Data.Sqlite;
 using System.IO;
 
-public class Database : Gamelogic.Extensions.Singleton<Database>
+public class Database
 {
-	SqliteConnection _db = null;
-	public static SqliteConnection db { get { return Instance._db; } }
-
-	// Use this for initialization
-	void Awake()
+	public static SqliteConnection _db = null;
+	public static SqliteConnection DB
 	{
-		DontDestroyOnLoad(gameObject);
-
-		if (!File.Exists("db.sqlite")) Debug.LogError("DB not found!");
-		_db = new SqliteConnection("Data Source=db.sqlite; Version=3");
-		_db.Open();
+		get
+		{
+			if (_db == null)
+			{
+				if (!File.Exists("db.sqlite")) Debug.LogError("DB not found!");
+				_db = new SqliteConnection("Data Source=db.sqlite; Version=3");
+				_db.Open();
+			}
+			return _db;
+		}
 	}
 }

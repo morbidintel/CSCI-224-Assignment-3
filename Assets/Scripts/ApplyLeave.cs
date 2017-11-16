@@ -31,7 +31,7 @@ public class ApplyLeave : MonoBehaviour
 		buttonsParent.SetActive(false);
 		managersDropdown.transform.parent.gameObject.SetActive(false);
 
-		using (SqliteCommand command = new SqliteCommand(Database.db))
+		using (SqliteCommand command = new SqliteCommand(Database.DB))
 		{
 			// populate managers dropdown
 			command.CommandText = "SELECT full_name FROM users WHERE role = \"Manager\" ORDER BY full_name ASC";
@@ -94,7 +94,7 @@ public class ApplyLeave : MonoBehaviour
 		}
 		dates = dates.TrimEnd(' ');
 
-		using (SqliteCommand command = new SqliteCommand(Database.db))
+		using (SqliteCommand command = new SqliteCommand(Database.DB))
 		{
 			command.CommandText = string.Format(
 				"UPDATE leaves " +

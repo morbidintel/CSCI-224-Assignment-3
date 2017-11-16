@@ -23,6 +23,8 @@ public class Login : MonoBehaviour
 
 		loginErrorText.gameObject.SetActive(false);
 		loadingText.gameObject.SetActive(false);
+
+		if (FindObjectOfType<TabSelect>() == null) new GameObject("TabSelect").AddComponent<TabSelect>();
 	}
 
 	void Update()
@@ -47,7 +49,7 @@ public class Login : MonoBehaviour
 
 		try
 		{
-			using (SqliteCommand command = new SqliteCommand(Database.db))
+			using (SqliteCommand command = new SqliteCommand(Database.DB))
 			{
 				command.CommandText =
 					"SELECT role FROM users " +
@@ -77,7 +79,8 @@ public class Login : MonoBehaviour
 
 	private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 	{
+		if (scene.name == "login") return;
 		User.Instance.SetUser(Username);
-		Destroy(gameObject);
+		if (this != null) Destroy(gameObject);
 	}
 }
