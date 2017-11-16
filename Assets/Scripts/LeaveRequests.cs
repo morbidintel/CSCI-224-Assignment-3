@@ -12,11 +12,13 @@ public class LeaveRequests : MonoBehaviour
 	GameObject entryPrefab = null;
 
 	public struct RequestRow { public string name, timestamp, status, dates; }
-	List<LeaveRequestEntry> entries = new List<LeaveRequestEntry>();
+	public List<LeaveRequestEntry> entries = new List<LeaveRequestEntry>();
 
 	// Use this for initialization
 	void Start()
 	{
+		entries.Clear();
+
 		using (SqliteCommand command = new SqliteCommand(Database.db))
 		{
 			command.CommandText =
@@ -47,5 +49,11 @@ public class LeaveRequests : MonoBehaviour
 	void Update()
 	{
 
+	}
+
+	public void RebuildList()
+	{
+		foreach (var e in entries) Destroy(e.gameObject);
+		Start();
 	}
 }
