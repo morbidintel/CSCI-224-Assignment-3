@@ -21,6 +21,7 @@ public class UIManager : MonoBehaviour
 		foreach (GameObject p in pages) p.SetActive(false);
 		MainPage.SetActive(true);
 		backButton.gameObject.SetActive(false);
+		logoutButton.gameObject.SetActive(true);
 	}
 
 	// Update is called once per frame
@@ -34,6 +35,7 @@ public class UIManager : MonoBehaviour
 		foreach (GameObject p in pages) p.SetActive(p == page);
 		MainPage.SetActive(page == MainPage);
 		backButton.gameObject.SetActive(page != MainPage);
+		logoutButton.gameObject.SetActive(page == MainPage);
 	}
 
 	public void Logout()

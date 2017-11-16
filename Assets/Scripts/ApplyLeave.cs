@@ -25,7 +25,7 @@ public class ApplyLeave : MonoBehaviour
 	List<Tuple<List<DateTime>, LeaveStatus>> leaves = new List<Tuple<List<DateTime>, LeaveStatus>>();
 
 	// Use this for initialization
-	void Start()
+	void Awake()
 	{
 		days.gameObject.SetActive(false);
 		buttonsParent.SetActive(false);

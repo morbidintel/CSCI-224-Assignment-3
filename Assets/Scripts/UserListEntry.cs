@@ -58,9 +58,9 @@ public class UserListEntry : MonoBehaviour
 			if (field == usernameField)
 			{
 				command.CommandText = string.Format(
-					"UPDATE users SET username = \"{0}\" " +
-					"WHERE role = \"{1}\" " +
-					"AND full_name = \"{2}\"",
+					"UPDATE hours SET username = \"{0}\" WHERE username = (SELECT username FROM users WHERE role = \"{1}\" AND full_name = \"{2}\");" +
+					"UPDATE leaves SET username = \"{0}\" WHERE username = (SELECT username FROM users WHERE role = \"{1}\" AND full_name = \"{2}\");" +
+	 				"UPDATE users SET username = \"{0}\" WHERE role = \"{1}\" AND full_name = \"{2}\";",
 					username, role, fullName);
 			}
 			else if (field == roleField)
@@ -79,8 +79,10 @@ public class UserListEntry : MonoBehaviour
 					"AND username = \"{0}\"",
 					username, role, fullName);
 			}
+			command.ExecuteNonQuery();
 		}
 
 		anim.DORestart();
+		User.Instance.SetUser(username);
 	}
 }
